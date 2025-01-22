@@ -45,7 +45,8 @@ Toolkit.run(async (tools) => {
     let check_id = response.data.id;
     console.log(`Check Successfully Created`, check_id);
 
-    let prData = await getDiffWithLineNumbers('HEAD^1');
+    let baseBranch = PR.base.ref;
+    let prData = await getDiffWithLineNumbers(baseBranch);
 
     const coverageReportPath = core.getInput('coverage-info-path');
     const noOfCoverageFiles = core.getInput('total-coverage-files');
