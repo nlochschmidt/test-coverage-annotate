@@ -2,7 +2,7 @@ const { exec, execSync } = require("child_process");
 
 function getDiffWithLineNumbers(baseBranch) {
   return new Promise((resolve, reject) => {
-    exec(`git diff --name-only ${baseBranch}`, (error, stdout, stderr) => {
+    exec(`git diff --name-only ${baseBranch}...HEAD`, (error, stdout, stderr) => {
       if (error) {
         reject(error);
         return;
@@ -15,7 +15,7 @@ function getDiffWithLineNumbers(baseBranch) {
         let allChangedLines;
         try {
           allChangedLines = execSync(
-            `git diff --unified=0 ${baseBranch} --ignore-all-space ${file} | grep -E '^\\+\\+\\+' -v | grep -E '^\\+'`
+            `git diff --unified=0 ${baseBranch}...HEAD --ignore-all-space ${file} | grep -E '^\\+\\+\\+' -v | grep -E '^\\+'`
           ).toString();
         } catch (err) {
           console.log(`Seems Like No New Stuff was added in ${file}. Skipping It.`);
@@ -24,7 +24,7 @@ function getDiffWithLineNumbers(baseBranch) {
         allChangedLines = allChangedLines.trim();
 
         let linesNos = execSync(
-          `git diff --unified=0 ${baseBranch} --ignore-all-space ${file} | grep -e '^@@' | awk -F'@@' '{print $2}'`
+          `git diff --unified=0 ${baseBranch}...HEAD --ignore-all-space ${file} | grep -e '^@@' | awk -F'@@' '{print $2}'`
         ).toString();
         linesNos = linesNos.trim();
         let matches = linesNos.match(regex).map((match) => match.substring(1));
